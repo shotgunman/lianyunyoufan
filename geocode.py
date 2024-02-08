@@ -3,7 +3,7 @@ import requests
 
 def get_geocode(data):
     url = "https://restapi.amap.com/v3/geocode/geo"
-    key = "你的KEY"
+    key = ("KEY")
 
     address = data.get('address')
     city = data.get('city')

@@ -42,3 +42,4 @@ def find_shortest_path(points):
 # shortest_path, min_distance = find_shortest_path(points)
 # print(shortest_path, min_distance)
 #
+#
