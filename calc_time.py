@@ -18,7 +18,7 @@ def point_within(lst, target, index, KI):
             if (lst[i][index] - KI < target[index] < lst[-1][index] + KI) or (lst[i][index] + KI > target[index] > lst[-1][index] - KI):
                 return True
         else:
-            if (lst[i][index] - KI < target[index] < lst[i+3][index] + KI) or (lst[i][index] + KI > target[index] > lst[i+3][index] - KI):
+            if (lst[i][index] - KI < target[index] < lst[i+6][index] + KI) or (lst[i][index] + KI > target[index] > lst[i+6][index] - KI):
                 return True
 
 
