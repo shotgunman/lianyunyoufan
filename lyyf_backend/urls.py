@@ -28,4 +28,5 @@ urlpatterns = [
     #path('choice/<slug:slug1>/',views.choice),#出行天数
     #path('choice/<slug:slug1>/<slug:slug2>/', views.choice),#在意什么
     path('day_choose/',views.days_choose),
+    path('map/',views.mapping),
 ]

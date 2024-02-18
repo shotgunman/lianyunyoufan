@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 import json
 from django.core.serializers import serialize
+from lianyouyunfan import geocode
 
 # Create your views here.
 #用户界面
@@ -44,16 +45,14 @@ def choice(request):
         pass
     return None
 def mapping(request):
-    keyword = request.POST.get()
+    keyword = request.POST.get('keyword')
     city = request.session.get('site')
-    list = {'address': keyword, 'city': city}
-    json.dumps(list)
-    return JsonResponse(list)
-
-
-"""def login(request):
-    if request.method == 'POST':
-        user_data_list = UserInfo.objects.all()"""
+    data_list = [{'address': keyword, 'city': city}]
+    result = geocode.get_geo_list(data_list)
+    if result[2] == "地理编码获取失败":
+        return HttpResponse("地理编码获取失败")
+    json_result = json.dumps(result)
+    return HttpResponse(json_result)
 
 
 
