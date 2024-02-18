@@ -1,10 +1,8 @@
 import requests
 
-
 def get_geocode(data):
     url = "https://restapi.amap.com/v3/geocode/geo"
-    key = ("KEY")
-
+    key = ("0975e803904c4538ede7c07e7c9acf02")
     address = data.get('address')
     city = data.get('city')
 
@@ -36,7 +34,8 @@ def get_geo_list(data_list):
         location = get_geocode(data)
         geocode_results.append(location)
         if not location:
-            geocode_results.append(data + "地理编码获取失败")
+            geocode_results.append(data)
+            geocode_results.append("地理编码获取失败")
 
     return geocode_results
 
