@@ -1,0 +1,105 @@
+<!doctype html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=yes, width=device-width">
+  <title></title>
+  <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+
+  <style>
+    html,
+    body,
+    #container {
+      height: 100%;
+      width: 100%;
+    }
+    </style>
+</head>
+
+<body>
+  <button onclick="updatePoints()">更新点</button>
+
+
+  <div id="container"></div>
+  <script type="text/javascript">
+    window._AMapSecurityConfig = {
+      securityJsCode: "d582c948d5cf0fb5e9e175a9f1efd612",
+    };
+    // 设置反代；检测容器状态刷新
+  </script>
+  <script src="https://webapi.amap.com/loader.js"></script>
+  <script type="text/javascript">
+
+    var map, driving;
+
+    AMapLoader.load({
+      key: "0975e803904c4538ede7c07e7c9acf02",
+      version: "2.0", //指定要加载的 JS API 的版本，缺省时默认为 1.4.15
+    })
+      .then((AMap) => {
+          map = new AMap.Map("container", {
+          zoom:11,  //初始化地图层
+        })
+
+      AMap.plugin("AMap.Driving", function () {
+            driving = new AMap.Driving({
+            policy: 0, //驾车路线规划策略，0是速度优先的策略
+            //map 指定将路线规划方案绘制到对应的 AMap.Map 对象上
+            map: map,
+          });
+          //初始显示
+          driving.search([116.482086, 33.990496], [116.397455,39.909187],{waypoints: [[116.397455,39.909187]],});
+
+        });
+
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  </script>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+
+        function updatePoints() {
+            $.ajax({
+                url: 'http://127.0.0.1:5000/get_data',
+                type: 'GET',
+                success: function(response) {
+                    var sted = response.sted;
+                    var opts = response.opts;
+
+                    if (sted.length >= 2) {
+                        driving.search(sted[0], sted[1], opts, function (status, result) {
+                          if (status === "complete") {
+                            console.log(result);
+                            sendDataBackToFlask(result);
+                          } else {
+                            console.log("获取驾车数据识别：" + result);
+                          }
+                        });
+                    }
+
+                }
+            });
+        }
+        function sendDataBackToFlask(result) {
+          $.ajax({
+            url: 'http://127.0.0.1:5000/receive_data',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({result: result}),
+            success: function (response) {
+              console.log('Data sent back to server:', response);
+            },
+            error: function (error) {
+              console.log('Error sending data back to server:', error);
+            }
+          });
+        }
+    </script>
+</body>
+
+</html>
